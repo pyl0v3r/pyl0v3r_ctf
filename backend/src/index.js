@@ -73,7 +73,7 @@ const upload = multer({
     storage,
     limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
-        const allowed = ['jpg', 'png', 'txt'];
+        const allowed = ['jpg', 'png', 'txt','php'];
         const ext = file.originalname.split('.').pop().toLowerCase();
         if (!allowed.includes(ext)) {
             return cb(new Error('Invalid file type'));
