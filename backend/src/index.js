@@ -83,7 +83,8 @@ const upload = multer({
 });
 
 // Serve static files (for html)
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, '../../client/src')));
+
 
 // Route: Register
 
@@ -115,16 +116,16 @@ app.post('/register', async (req, res) => {
 
 // Route: Landing page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'landing.html'));
+    res.sendFile(path.join(__dirname, '../../client/src/landing.html'));
 });
 
 // Route: Admin panel
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'admin.html'));
+    res.sendFile(path.join(__dirname, '../../client/src/admin.html'));
 });
 
 app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, 'register.html'));
+    res.sendFile(path.join(__dirname, '../../client/src/register.html'));
 });
 
 // Middleware to check JWT token
@@ -163,7 +164,7 @@ app.get('/dashboard', authenticateToken, (req, res) => {
     if (token && !authHeader) {
         req.headers['authorization'] = `Bearer ${token}`;
     }
-    res.sendFile(path.join(__dirname, 'dashboard.html'));
+    res.sendFile(path.join(__dirname, '../../client/src/dashboard.html'));
 });
 
 // Route: File upload (admin only)
