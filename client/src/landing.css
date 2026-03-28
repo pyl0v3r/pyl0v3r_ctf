@@ -1,0 +1,247 @@
+        /* Theme inspired by admin login page */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        nav {
+            background: rgba(34, 34, 34, 0.95);
+            color: #fff;
+            padding: 1.2em 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 16px 0 rgba(31, 38, 135, 0.10);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li {
+            margin: 0 1.7em;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.08em;
+            letter-spacing: 0.5px;
+            transition: color 0.2s;
+            padding: 0.2em 0.4em;
+            border-radius: 6px;
+        }
+
+        nav ul li a:hover {
+            color: #764ba2;
+            background: #fff;
+        }
+
+        section {
+            padding: 2.5em 1.2em;
+            max-width: 900px;
+            margin: 2.5em auto 2em auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+        }
+
+        h1,
+        h2 {
+            color: #4f3c8d;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Carousel */
+        .carousel {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto 2em;
+            overflow: hidden;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(31, 38, 135, 0.12);
+            background: #f6f6fa;
+        }
+
+        .carousel img {
+            width: 100%;
+            display: none;
+            height: 340px;
+            object-fit: cover;
+            border-radius: 14px;
+        }
+
+        .carousel img.active {
+            display: block;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .carousel-controls button {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: #fff;
+            font-size: 2em;
+            padding: 0.2em 0.6em;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(31, 38, 135, 0.10);
+            pointer-events: all;
+            opacity: 0.85;
+            transition: background 0.2s, opacity 0.2s;
+        }
+
+        .carousel-controls button:hover {
+            background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+            opacity: 1;
+        }
+
+        /* Team */
+        .team-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 2em;
+        }
+
+        .team-member {
+            background: #f6f6fa;
+            border-radius: 12px;
+            padding: 1.3em 1em 1.1em 1em;
+            text-align: center;
+            width: 210px;
+            box-shadow: 0 2px 12px rgba(31, 38, 135, 0.07);
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .team-member:hover {
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.13);
+            transform: translateY(-4px) scale(1.03);
+        }
+
+        .team-member img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1em;
+            border: 3px solid #764ba2;
+        }
+
+        .team-member h3 {
+            margin: 0.5em 0 0.2em;
+            color: #4f3c8d;
+            font-size: 1.15em;
+        }
+
+        .team-member p {
+            color: #555;
+            font-size: 1em;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1em;
+            max-width: 400px;
+            margin: 0 auto;
+            background: #f6f6fa;
+            padding: 2em 1.5em 1.5em 1.5em;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(31, 38, 135, 0.07);
+        }
+
+        .contact-form label {
+            font-weight: 500;
+            color: #4f3c8d;
+            margin-bottom: 0.2em;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 0.7em;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: #764ba2;
+            outline: none;
+        }
+
+        .contact-form button {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            padding: 0.8em;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, opacity 0.2s;
+            opacity: 0.8;
+        }
+
+        .contact-form button:hover {
+            background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+            opacity: 1;
+        }
+
+        footer {
+            background: rgba(34, 34, 34, 0.97);
+            color: #fff;
+            text-align: center;
+            padding: 1.5em 0;
+            margin-top: -1em;
+            font-size: 1em;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 -2px 16px 0 rgba(31, 38, 135, 0.10);
+        }
+
+        @media (max-width: 900px) {
+            section {
+                max-width: 98vw;
+            }
+
+            .carousel {
+                max-width: 98vw;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .team-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            section {
+                padding: 1.3em 0.5em;
+            }
+
+            .carousel {
+                height: auto;
+            }
+        }

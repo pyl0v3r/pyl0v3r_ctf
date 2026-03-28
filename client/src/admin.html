@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="admin.css" />
+</head>
+
+<body>
+    <form class="login-container" autocomplete="off">
+        <h2>Admin Login</h2>
+        <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autocomplete="off">
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="off">
+        </div>
+        <button type="submit" class="login-btn" id="loginBtn" disabled>Login</button>
+    </form>
+    <script>
+        // Check for token in cookies and redirect if present
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        if (getCookie('token')) {
+            window.location.href = '/dashboard';
+        }
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+
+        function validateInputs() {
+            loginBtn.disabled = !(username.value.trim() && password.value.trim());
+        }
+
+        username.addEventListener('input', validateInputs);
+        password.addEventListener('input', validateInputs);
+
+        document.querySelector('form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            if (loginBtn.disabled) return;
+            const res = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: username.value,
+                    password: password.value
+                })
+            });
+            const data = await res.json();
+            if (res.ok && data.token) {
+                // Save token in cookie only, with Bearer prefix
+                document.cookie = `token=${encodeURIComponent(data.token)}; path=/; SameSite=Lax`;
+                window.location.href = '/dashboard';
+            } else {
+                alert(data.error || 'Login failed');
+            }
+        });
+    </script>
+</body>
+
+</html>

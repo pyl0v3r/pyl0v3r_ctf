@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="sidebar">
+            <a href="#" id="nav-home" class="active">Home</a>
+            <a href="#" id="nav-upload">Upload</a>
+        </nav>
+        <main class="main">
+            <section id="section-home">
+                <h2>Welcome to the Dashboard</h2>
+                <div id="flag" class="flag">Loading flag...</div>
+            </section>
+            <section id="section-upload" style="display:none;">
+                <h2>Upload a File</h2>
+                <form id="uploadForm" class="upload-section">
+                    <input type="file" id="fileInput" name="file" accept=".jpg,.png,.txt" required />
+                    <br>
+                    <button type="submit">Upload</button>
+                </form>
+                <div id="uploadMsg"></div>
+            </section>
+        </main>
+    </div>
+    <button id="logoutBtn" style="position:absolute;top:20px;right:20px;">Logout</button>
+    <script>
+        // Sidebar navigation
+        const navHome = document.getElementById('nav-home');
+        const navUpload = document.getElementById('nav-upload');
+        const sectionHome = document.getElementById('section-home');
+        const sectionUpload = document.getElementById('section-upload');
+
+        navHome.onclick = function () {
+            navHome.classList.add('active');
+            navUpload.classList.remove('active');
+            sectionHome.style.display = '';
+            sectionUpload.style.display = 'none';
+        };
+        navUpload.onclick = function () {
+            navUpload.classList.add('active');
+            navHome.classList.remove('active');
+            sectionHome.style.display = 'none';
+            sectionUpload.style.display = '';
+        };
+
+        // Logout functionality
+        document.getElementById('logoutBtn').onclick = function () {
+            // Delete the 'token' cookie
+            document.cookie = 'token=; Max-Age=0; path=/;';
+            window.location = '/';
+        };
+
+        // Get JWT from localStorage (assume login stores it as 'token')
+        // Get JWT from cookies (assume login sets it as 'token')
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+        const token = getCookie('token');
+        if (!token) {
+            alert('No token found. Please login at /admin.');
+            window.location = '/admin';
+        }
+
+        // Fetch flag (get the flag text, not the hash)
+        fetch('/flag', {
+            headers: { 'Authorization': token }
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.flag) {
+                    document.getElementById('flag').textContent = 'Flag: ' + data.flag;
+                } else {
+                    document.getElementById('flag').textContent = 'Could not fetch flag.';
+                }
+            })
+            .catch(() => {
+                document.getElementById('flag').textContent = 'Could not fetch flag.';
+            });
+
+        // Upload functionality
+        document.getElementById('uploadForm').onsubmit = async function (e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const msgDiv = document.getElementById('uploadMsg');
+            msgDiv.textContent = '';
+            msgDiv.className = '';
+            // Get token from cookies
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+            const token = getCookie('token');
+            // Function to parse JWT and get payload
+            function parseJwt(token) {
+                try {
+                    const base64Url = token.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+                    return JSON.parse(jsonPayload);
+                } catch (e) {
+                    return null;
+                }
+            }
+            // Check role from JWT
+            let userRole = null;
+            if (token) {
+                const payload = parseJwt(token);
+                if (payload && payload.role) {
+                    userRole = payload.role;
+                }
+            }
+            if (userRole !== 'admin') {
+                msgDiv.textContent = 'You need admin privileges to upload files.';
+                msgDiv.className = 'error';
+                return;
+            }
+            if (!file) {
+                msgDiv.textContent = 'Please select a file.';
+                msgDiv.className = 'error';
+                return;
+            }
+            // Validate size
+            if (file.size > 10 * 1024 * 1024) {
+                msgDiv.textContent = 'File too large. Max 10MB.';
+                msgDiv.className = 'error';
+                return;
+            }
+            // Validate extension
+            const allowed = ['jpg', 'png', 'txt'];
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!allowed.includes(ext)) {
+                msgDiv.textContent = 'Invalid file type. Only jpg, png, txt allowed.';
+                msgDiv.className = 'error';
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', file);
+            try {
+                const res = await fetch('/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': token },
+                    body: formData
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msgDiv.textContent = data.message || 'Upload successful!';
+                    msgDiv.className = 'success';
+                } else {
+                    msgDiv.textContent = data.error || 'Upload failed.';
+                    msgDiv.className = 'error';
+                }
+            } catch (err) {
+                msgDiv.textContent = 'Upload failed.';
+                msgDiv.className = 'error';
+            }
+        };
+    </script>
+</body>
+
+</html>
